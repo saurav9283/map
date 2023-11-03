@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { MapContainer, TileLayer, LayersControl, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, LayersControl, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Icon } from "leaflet";
 import locationImage from "./location.png";
 
-const center = [28.526563890713174, 77.11413256189118];
+const center = [22.3511148, 78.6677428]; // Coordinates for the center of India
 
 function App() {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -21,11 +21,11 @@ function App() {
   const customIcon = new Icon({
     iconUrl: locationImage,
     iconSize: [32, 32],
-    iconAnchor: [16, 32], 
+    iconAnchor: [16, 32],
   });
 
   return (
-    <MapContainer center={center} zoom={13} style={{ width: "100vw", height: "100vh" }}>
+    <MapContainer center={currentLocation || center} zoom={currentLocation ? 13 : 5} style={{ width: "100vw", height: "100vh" }}>
       <LayersControl position="topright">
         <LayersControl.BaseLayer checked name="OpenStreetMap">
           <TileLayer
