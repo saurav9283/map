@@ -1,11 +1,31 @@
-import { MapContainer, TileLayer, LayersControl } from "react-leaflet";
+import React, { useState, useEffect } from "react";
+import { MapContainer, TileLayer, LayersControl, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import { Icon } from "leaflet";
+import locationImage from "./location.png";
 
 const center = [28.526563890713174, 77.11413256189118];
 
 function App() {
+  const [currentLocation, setCurrentLocation] = useState(null);
+
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+        setCurrentLocation([latitude, longitude]);
+      });
+    }
+  }, []);
+
+  const customIcon = new Icon({
+    iconUrl: locationImage,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32], 
+  });
+
   return (
-    <MapContainer center={center} zoom={3} style={{ width: "100vw", height: "100vh" }}>
+    <MapContainer center={center} zoom={13} style={{ width: "100vw", height: "100vh" }}>
       <LayersControl position="topright">
         <LayersControl.BaseLayer checked name="OpenStreetMap">
           <TileLayer
@@ -20,6 +40,14 @@ function App() {
           />
         </LayersControl.BaseLayer>
       </LayersControl>
+
+      {currentLocation && (
+        <Marker position={currentLocation} icon={customIcon}>
+          <Popup>
+            Current Location
+          </Popup>
+        </Marker>
+      )}
     </MapContainer>
   );
 }
